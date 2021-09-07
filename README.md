@@ -1,4 +1,4 @@
-# corona_travel
+<center>orona_travel</center>
 ## web app for online travel
 
 Scope
