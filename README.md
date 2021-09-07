@@ -20,9 +20,12 @@ Actors
 
 Features
 --------
-* videos
-* games
-* facts
-* audio
-* quiz
+* videos - users can see 3D-videos in their browser, which 
+* * audio - users can listen to audio, like guides or nature sounds
+
+* facts - users learn facts about places that they visit
+* * quiz - users can take quiz on facts they learnt
+
+* games - users can play interactive games in browser themed around traveling
+
 * geogesser?
