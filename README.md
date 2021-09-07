@@ -1,4 +1,4 @@
-# corona_travel
+# Corona Travel
 
 ## web app for online travel
 
