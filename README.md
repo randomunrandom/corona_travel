@@ -1,4 +1,4 @@
-# Corona Travel
+# 🦠 Corona Travel
 
 ## web application for online travel in times of global pandemic
 
