@@ -1,3 +1,5 @@
+Based on description and user story in [Task3](https://github.com/randomunrandom/corona_travel/blob/c0231f534defd03539edac0142a58a1222940785/Task%203.%20Product%20definition.pptx)
+
 | Candidate   | Criteria  | Stored information                                              | Operations                                                       |
 |:------------|-----------|:----------------------------------------------------------------|:-----------------------------------------------------------------|
 | User        | SIOAT     | name, hash of a password, quiz results, visited places          | take a quiz, view places                                         |
