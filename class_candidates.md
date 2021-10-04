@@ -12,10 +12,10 @@
 
 Included not from description or story, but as a logical counterpart to above
 
-| Candidate   | Criteria  | Stored information                                              | Operations                                                       |
-|:------------|-----------|:---------------------------------------------------------------:|:----------------------------------------------------------------:|
-| Server      | SIOAUT    | version, map, places, quizes, results                           | login, CUD map, CRUD place                                       |
-| Map         | SIT       | list of places, lsit of journeys                                | add place, remove place, move to                                 |
-| Journey     | SIOAU     | name, date started, list of places, add place, remove place,    | create, add place, remove place, add quiz, remove quiz, postpone |
-| Quiz        | SIOAUT    | list of facts, name, author                                     | solve, create, add fact                                          |
+| Candidate   | Criteria  | Stored information                                          | Operations                                                       |
+|:------------|-----------|:------------------------------------------------------------|:-----------------------------------------------------------------|
+| Server      | SIOAUT    | version, map, places, quizes, results                       | login, CUD map, CRUD place                                       |
+| Map         | SIT       | list of places, lsit of journeys                            | add place, remove place, move to                                 |
+| Journey     | SIOAU     | name, date started, list of places, add place, remove place | create, add place, remove place, add quiz, remove quiz, postpone |
+| Quiz        | SIOAUT    | list of facts, name, author                                 | solve, create, add fact                                          |
 
