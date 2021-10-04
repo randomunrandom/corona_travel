@@ -1,5 +1,5 @@
 | Candidate   | Criteria  | Stored information                                              | Operations                                                       |
-|:------------|-----------|:---------------------------------------------------------------:|:----------------------------------------------------------------:|
+|:------------|-----------|:----------------------------------------------------------------|:-----------------------------------------------------------------|
 | User        | SIOAT     | name, hash of a password, quiz results, visited places          | take a quiz, view places                                         |
 | App         | SIOAUT    | version, device, user info                                      | login, RU map, CRUD place, CRUD quiz                             |
 | Location    | duplicate | of                                                              | Place                                                            |
