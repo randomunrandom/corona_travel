@@ -1,0 +1,1318 @@
+openapi: 3.0.1
+info:
+  title: Corona Travel Microservice API
+  description: Corona Travel is a web application that allows users to travel online from home via any device. This is open API documentation for the application's microservices.
+  version: 0.1.0
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: admin@coronatravel.app
+  license:
+    name: MIT
+    url: https://mit-license.org/
+externalDocs:
+  description: Find out more about Corona Travel App (GitHub Wiki)
+  url: https://github.com/randomunrandom/corona_travel/wiki
+servers:
+  - url: https://api.coronatravel.app/v0
+tags:
+  - name: service:map2D
+    description: operations with 2D maps
+  - name: service:map3D
+    description: operations with 3D maps
+  - name: service:quiz manager
+    description: operations with quizes
+  - name: resource:fact
+    description: operations on facts
+  - name: resource:place
+    description: operations on places
+  - name: resource:quiz
+    description: operations on quizes
+  - name: resource:media
+    description: operations on media
+
+paths:
+  
+  # resources
+  
+  ## Fact
+
+  /facts:
+    get:
+      summary: get all facts
+      description: returns a list of all facts
+      operationId: getFacts
+      tags:
+        - resource:fact
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Fact'
+    post:
+      summary: add a fact
+      description: adds a fact and assignes unique ID
+      operationId: addFact
+      tags:
+        - resource:fact
+      requestBody:
+        description: Fact object that needs to be added to the DB
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Fact'
+        required: true
+      responses:
+        200:
+          description: fact added
+          content: {}
+        400:
+          description: ID occupied
+          content: {}
+  /fact/{factID}:
+    get:
+      summary: get fact by ID
+      description: returns a single fact with specified ID
+      operationId: getFactById
+      tags:
+        - resource:fact
+      parameters:
+        - name: factID
+          in: path
+          description: ID of fact to return
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fact'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Fact with specefied ID was not found
+          content: {}
+    patch:
+      summary: update fact by ID
+      description: updates specefied by ID fact with passed parameters
+      operationId: updateFactById
+      tags:
+        - resource:fact
+      parameters:
+        - in: path
+          name: factID
+          description: ID of fact to update
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: description
+          schema:
+            type: string
+          description: new `description` of Fact
+        - in: query
+          name: lat
+          schema:
+            type: number
+            format: float
+          description: new `position.lat` of Fact
+        - in: query
+          name: lng
+          schema:
+            type: number
+            format: float
+          description: new `position.lng` of Fact
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fact'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Fact with specefied ID was not found
+          content: {}
+        409:
+          description: No new parameters were supplied
+          content: {}
+    put:
+      summary: replace fact by ID
+      description: replaces specefied by ID fact with passed fact
+      operationId: replaceFactById
+      tags:
+        - resource:fact
+      parameters:
+        - in: path
+          name: factID
+          description: ID of fact to replace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: new fact
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FactWithoutID'
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fact'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Fact with specefied ID was not found
+          content: {}
+    delete:
+      summary: remove fact by ID
+      description: removes a single fact with specified ID
+      operationId: deleteFactById
+      parameters:
+        - name: factID
+          in: path
+          description: ID of fact to remove
+          required: true
+          schema:
+            type: string
+      tags:
+        - resource:fact
+      responses:
+        200:
+          description: successfully deleted
+          content: {}
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Fact with specefied ID was not found
+          content: {}
+  
+  ## Place
+  
+  /place:
+    get:
+      summary: get all places
+      description: returns a list of all places
+      operationId: getPlaces
+      tags:
+        - resource:place
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Place'
+    post:
+      summary: add a place
+      description: adds a place and assignes unique ID
+      operationId: addPlace
+      tags:
+        - resource:place
+      requestBody:
+        description: Place object that needs to be added to the DB
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Place'
+        required: true
+      responses:
+        200:
+          description: place added
+          content: {}
+        400:
+          description: ID occupied
+          content: {}
+  /place/{placeID}:
+    get:
+      summary: get place by ID
+      description: returns a single place with specified ID
+      operationId: getPlaceById
+      tags:
+        - resource:place
+      parameters:
+        - name: placeID
+          in: path
+          description: ID of place to return
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Place"
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Place with specefied ID was not found
+          content: {}
+    patch:
+      summary: update place by ID
+      description: updates specefied by ID place with passed parameters
+      operationId: updatePlaceById
+      tags:
+        - resource:place
+      parameters:
+        - in: path
+          name: placeID
+          description: ID of place to update
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: new `name` of Place
+        - in: query
+          name: lat
+          schema:
+            type: string
+          description: new `position.lat` of Place
+        - in: query
+          name: lng
+          schema:
+            type: number
+            format: float
+          description: new `position.lng` of Place
+        - in: query
+          name: display_on_2D_Map
+          schema:
+            type: number
+            format: float
+          description: new `display_on_2D_Map` of Place
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Place'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Place with specefied ID was not found
+          content: {}
+        409:
+          description: No new parameters were supplied
+          content: {}
+    put:
+      summary: replace place by ID
+      description: replaces specefied by ID place with passed place
+      operationId: replacePlaceById
+      tags:
+        - resource:place
+      parameters:
+        - in: path
+          name: placeID
+          description: ID of place to replace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: new place
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceWithoutID'
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Place'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Place with specefied ID was not found
+          content: {}
+    delete:
+      summary: remove place by ID
+      description: removes a single place with specified ID
+      operationId: deletePlaceById
+      parameters:
+        - name: placeID
+          in: path
+          description: ID of place to remove
+          required: true
+          schema:
+            type: string
+      tags:
+        - resource:place
+      responses:
+        200:
+          description: successfully deleted
+          content: {}
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Place with specefied ID was not found
+          content: {}
+  
+  ## Quiz
+  
+  /quiz:
+    get:
+      summary: get all quizes
+      description: returns a list of all quizes
+      operationId: getQuizes
+      tags:
+        - resource:quiz
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuizWithoutAnswer'
+    post:
+      summary: add a quiz
+      description: adds a quiz and assignes unique ID
+      operationId: addQuiz
+      tags:
+        - resource:quiz
+      requestBody:
+        description: Quiz object that needs to be added to the DB
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuizWithAnswer'
+        required: true
+      responses:
+        200:
+          description: quiz added
+          content: {}
+        400:
+          description: ID occupied
+          content: {}
+  /place/{quizID}:
+    get:
+      summary: get quiz by ID
+      description: returns a single quiz with specified ID
+      operationId: getQuizById
+      tags:
+        - resource:quiz
+      parameters:
+        - name: quizID
+          in: path
+          description: ID of quiz to return
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuizWithoutAnswer"
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Quiz with specefied ID was not found
+          content: {}
+    # patch:
+    #   summary: update quiz by ID
+    #   description: updates specefied by ID quiz with passed parameters
+    #   operationId: updateQuizById
+    #   tags:
+    #     - resource:quiz
+    #   parameters:
+    #     - in: path
+    #       name: quizID
+    #       description: ID of quiz to update
+    #       required: true
+    #       schema:
+    #         type: string
+    #     - in: query
+    #       name: name
+    #       schema:
+    #         type: string
+    #       description: new `name` of Quiz
+    #     - in: query
+    #       name: questions
+    #       schema:
+    #         type: string
+    #       description: new `questions` of Quiz
+    #   responses:
+    #     200:
+    #       description: successful operation
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Quiz'
+    #     400:
+    #       description: Invalid ID supplied
+    #       content: {}
+    #     404:
+    #       description: Media with specefied ID was not found
+    #       content: {}
+    #     409:
+    #       description: No new parameters were supplied
+    #       content: {}
+    put:
+      summary: replace quiz by ID
+      description: replaces specefied by ID quiz with passed quiz
+      operationId: replaceQuizById
+      tags:
+        - resource:quiz
+      parameters:
+        - in: path
+          name: quizID
+          description: ID of quiz to replace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: new quiz
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuizWithAnswerWithoutID'
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuizWithAnswer'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Quiz with specefied ID was not found
+          content: {}
+    delete:
+      summary: remove quiz by ID
+      description: removes a single quiz with specified ID
+      operationId: deleteQuizById
+      parameters:
+        - name: quizID
+          in: path
+          description: ID of quiz to remove
+          required: true
+          schema:
+            type: string
+      tags:
+        - resource:quiz
+      responses:
+        200:
+          description: successfully deleted
+          content: {}
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Quiz with specefied ID was not found
+          content: {}
+  
+  ## Media
+  
+  /media:
+    get:
+      summary: get all medias
+      description: returns a list of all medias
+      operationId: getMedias
+      tags:
+        - resource:media
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Media'
+    post:
+      summary: add a media
+      description: adds a media and assignes unique ID
+      operationId: addMedia
+      tags:
+        - resource:media
+      requestBody:
+        description: Media object that needs to be added to the DB
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Media'
+        required: true
+      responses:
+        200:
+          description: media added
+          content: {}
+        400:
+          description: ID occupied
+          content: {}
+  /place/{mediaID}:
+    get:
+      summary: get media by ID
+      description: returns a single media with specified ID
+      operationId: getMediaById
+      tags:
+        - resource:media
+      parameters:
+        - name: mediaID
+          in: path
+          description: ID of media to return
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Media"
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Media with specefied ID was not found
+          content: {}
+    patch:
+      summary: update media by ID
+      description: updates specefied by ID media with passed parameters
+      operationId: updateMediaById
+      tags:
+        - resource:media
+      parameters:
+        - in: path
+          name: mediaID
+          description: ID of media to update
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: type
+          schema:
+            type: string
+          description: new `type` of Media
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: new `name` of Media
+        - in: query
+          name: lat
+          schema:
+            type: string
+          description: new `pos.lat` of Media
+        - in: query
+          name: lng
+          schema:
+            type: string
+          description: new `pos.lng` of Media
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Media'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Media with specefied ID was not found
+          content: {}
+        409:
+          description: No new parameters were supplied
+          content: {}
+    put:
+      summary: replace media by ID
+      description: replaces specefied by ID media with passed media
+      operationId: replaceMediaById
+      tags:
+        - resource:media
+      parameters:
+        - in: path
+          name: mediaID
+          description: ID of media to replace
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: new media
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MediaWithoutID'
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Media'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Media with specefied ID was not found
+          content: {}
+    delete:
+      summary: remove media by ID
+      description: removes a single media with specified ID
+      operationId: deleteMediaById
+      parameters:
+        - name: mediaID
+          in: path
+          description: ID of media to remove
+          required: true
+          schema:
+            type: string
+      tags:
+        - resource:media
+      responses:
+        200:
+          description: successfully deleted
+          content: {}
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: Media with specefied ID was not found
+          content: {}
+  
+  # services
+  
+  ## maps
+  
+  /map/2D:
+    get:
+      summary: get markers to display
+      description: get a list of markers to display on 2D map
+      operationId: getMap2D
+      tags:
+        - service:map2D
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Marker2D'
+  
+  /map/3D/{lat}/{lng}:
+    get:
+      summary: get markers to display
+      description: get a list of markers to display on 3D map by current position
+      operationId: getMap3D
+      tags:
+        - service:map3D
+      parameters:
+        - in: path
+          name: lat
+          description: latitude
+          required: true
+          schema:
+            type: number
+            format: float
+        - in: path
+          name: lng
+          description: longitude
+          required: true
+          schema:
+            type: number
+            format: float
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Marker3D'
+      
+  
+  ## quiz manager
+
+  /user/{userID}/quiz:
+    get:
+      tags:
+      - service:quiz manager
+      summary: List of personal quizes
+      description: Returns a list of quizes added by the user with userid
+      operationId: getPersonalQuizes
+      parameters:
+      - name: userID
+        in: path
+        description: ID of the user
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuizFull'
+        404:
+          description: user not found
+          content: {}
+      # security:
+      # - coronatravel_auth:
+      #   - read:quiz
+    post:
+      tags:
+      - service:quiz manager
+      summary: Add new personal quiz
+      description: Creates a new personal quiz for the user with userid
+      operationId: createPersonalQuiz
+      parameters:
+      - name: userID
+        in: path
+        description: ID of the user
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Full quiz description
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuizFull'
+        required: true
+      responses:
+        201:
+          description: Created
+          content: {}
+        404:
+          description: User not found
+          content: {}
+      # security:
+      # - coronatravel_auth:
+      #   - write:quiz
+      #   - read:quiz
+    delete:
+      tags:
+      - service:quiz manager
+      summary: Delete all personal quizes
+      description: Deletes all personal quizes for the user with userid
+      operationId: deletePersonalQuizes
+      parameters:
+      - name: userID
+        in: path
+        description: ID of the user
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content: {}
+        405:
+          description: Method not allowed
+          content: {}
+      # security:
+      # - coronatravel_auth:
+      #   - write:quiz
+      #   - read:quiz
+  /user/{userID}/quiz-stat:
+    get:
+      tags:
+      - service:quiz manager
+      summary: Personal quiz statistics
+      description: Returns information about all solved quizes for user with userid
+      operationId: getQuizStat
+      parameters:
+      - name: userID
+        in: path
+        description: ID of the user
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/QuizStatistic'
+        404:
+          description: user not found
+          content: {}
+      # security:
+      # - coronatravel_auth:
+      #   - read:quiz
+  /user/{userID}/quiz/{quizID}:
+    get:
+      tags:
+      - service:quiz manager
+      summary: Personal quiz
+      description: Returns the user's with userid personal quiz with quizid
+      operationId: getPersonalQuiz
+      parameters:
+      - name: userID
+        in: path
+        description: ID of the user
+        required: true
+        schema:
+          type: string
+      - name: quizID
+        in: path
+        description: ID of the personal quiz
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuizFull'
+        404:
+          description: user or quiz not found
+          content: {}
+      # security:
+      # - coronatravel_auth:
+      #   - read:quiz
+    put:
+      tags:
+      - service:quiz manager
+      summary: Edit personal quiz with quizid of user with userid
+      parameters:
+      - name: userID
+        in: path
+        description: ID of the user
+        required: true
+        schema:
+          type: string
+      - name: quizID
+        in: path
+        description: ID of the personal quiz
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: new quiz data
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/QuizFull'
+        required: false
+      responses:
+        200:
+          description: successful operation
+          content: {}
+        204:
+          description: content not found
+          content: {}
+        404:
+          description: user or quiz not found
+          content: {}
+      # security:
+      # - coronatravel_auth:
+      #   - write:quiz
+      #   - read:quiz
+    delete:
+      tags:
+      - service:quiz manager
+      summary: Delete personal quiz with quizid of user with userid
+      parameters:
+      - name: userID
+        in: path
+        description: ID of the user
+        required: true
+        schema:
+          type: string
+      - name: quizID
+        in: path
+        description: ID of the personal quiz
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content: {}
+        405:
+          description: Method not allowed
+          content: {}
+      # security:
+      # - coronatravel_auth:
+      #   - write:quiz
+      #   - read:quiz
+
+components:
+  schemas:
+    # Universal
+    
+    Position:
+      title: Position
+      required:
+      - lat
+      - lng
+      type: object
+      properties:
+        lat:
+          title: Lat
+          type: number
+          format: float
+        lng:
+          title: Lng
+          type: number
+          format: float
+    
+    # resources
+    
+    ## Fact
+    
+    Fact:
+      title: Fact
+      required:
+      - description
+      - fact_id
+      - pos
+      type: object
+      properties:
+        description:
+          title: description
+          type: string
+        fact_id:
+          title: fact_id
+          type: string
+        pos:
+          "$ref": "#/components/schemas/Position"
+    
+    FactWithoutID:
+      # needed for replacing facts (PUT)
+      title: Fact without ID
+      required:
+      - description
+      - pos
+      type: object
+      properties:
+        description:
+          title: description
+          type: string
+        pos:
+          "$ref": "#/components/schemas/Position"
+    
+    # Place
+    
+    Place:
+      title: Place
+      type: object
+      required:
+      - place_id
+      - name
+      - pos
+      - display_on_2D_Map
+      properties:
+        place_id:
+          title: Place Id
+          type: string
+        name:
+          title: Name
+          type: string
+        pos:
+          "$ref": "#/components/schemas/Position"
+        display_on_2D_Map:
+          title: Display on 2D Map
+          type: boolean
+    
+    PlaceWithoutID:
+      # needed for replacing place (PUT)
+      title: Place without ID
+      type: object
+      required:
+      - name
+      - pos
+      - display_on_2D_Map
+      properties:
+        name:
+          title: Name
+          type: string
+        pos:
+          "$ref": "#/components/schemas/Position"
+        display_on_2D_Map:
+          title: Display on 2D Map
+          type: boolean
+    
+    # Quiz
+    
+    QuestionWithAnswer:
+      type: object
+      required:
+        - task
+        - answers
+        - correct
+      properties:
+        task:
+          type: string
+          format: string
+        answers:
+          type: array
+          items:
+            type: object
+            required:
+              - option
+              - correct
+            properties:
+              option:
+                type: string
+              correct:
+                type: boolean
+    
+    QuestionWithoutAnswer:
+      type: object
+      required:
+        - task
+        - answers
+      properties:
+        task:
+          type: string
+          format: string
+        answers:
+          type: array
+          items:
+            type: object
+            required:
+              - option
+            properties:
+              option:
+                type: string
+    
+    QuizWithoutAnswer:
+      type: object
+      required:
+        - quiz_id
+        - name
+        - questions
+      properties:
+        quiz_id:
+          type: string
+          format: string
+        name:
+          type: string
+          format: string
+        questions_without_answer:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionWithoutAnswer'
+    
+    QuizWithoutAnswerWithoutID:
+      type: object
+      required:
+        - name
+        - questions
+      properties:
+        name:
+          type: string
+          format: string
+        questions_without_answer:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionWithoutAnswer'
+    
+    QuizWithAnswer:
+      type: object
+      required:
+        - name
+        - questions
+        - quiz_id
+      properties:
+        quiz_id:
+          type: string
+          format: string
+        name:
+          type: string
+          format: string
+        questions_with_answer:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionWithAnswer'
+    
+    QuizWithAnswerWithoutID:
+      type: object
+      required:
+        - name
+        - questions
+      properties:
+        name:
+          type: string
+          format: string
+        questions_with_answer:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionWithAnswer'
+    
+    # Media
+    
+    Media:
+      title: Media
+      type: object
+      required:
+      - media_id
+      - type
+      - name
+      - pos
+      properties:
+        media_id:
+          title: Media Id
+          type: string
+        type:
+          title: Media Type
+          type: string
+          enum: [photo, video, audio]
+        name:
+          title: Name
+          type: string
+        pos:
+          "$ref": "#/components/schemas/Position"
+    
+    MediaWithoutID:
+      # needed for replacing media (PUT)
+      title: Media without ID
+      type: object
+      required:
+      - type
+      - name
+      - pos
+      properties:
+        type:
+          title: Media Type
+          type: string
+          enum: [photo, video, audio]
+        name:
+          title: Name
+          type: string
+        pos:
+          "$ref": "#/components/schemas/Position"
+    
+    # services
+    
+    ## map
+    
+    Marker2D:
+      title: Marker2D
+      type: object
+      required:
+      - name
+      - pos
+      properties:
+        name:
+          title: Name
+          type: string
+        pos:
+          "$ref": "#/components/schemas/Position"
+    
+    Marker3D:
+      title: Marker3D
+      type: object
+      required:
+      - type
+      - id
+      - name
+      - pos
+      properties:
+        type:
+          title: Entity type
+          type: string
+          enum: [place, fact, media, quiz]
+        id:
+          title: Entity Id
+          type: string
+        name:
+          title: Name
+          type: string
+        pos:
+          "$ref": "#/components/schemas/Position"
+      
+    
+    ## quiz manager
+    
+    # QuizResult:
+    #   type: object
+    #   properties:
+    #     correct:
+    #       type: array
+    #       items:
+    #         type: object
+    #         properties:
+    #           question_num:
+    #             type: integer
+    #             format: int32
+    #           correct_ans:
+    #             type: integer
+    #             format: int32
+    #     points:
+    #       type: integer
+    #       format: int32
+    
+    QuizFull:
+      type: object
+      properties:
+        place:
+          type: string
+          format: string
+        name:
+          type: string
+          format: string
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionWithAnswer'
+    
+    QuizStatistic:
+      title: QuizStatistic
+      type: object
+      properties:
+        quiz_name:
+          type: string
+          format: string
+        quiz_date:
+          type: string
+          format: date
+        result:
+          type: integer
+          format: int32
+    
+  securitySchemes:
+    coronatravel_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: http://corona_travel.app/oauth/dialog
+          scopes:
+            write:quiz: create personal quiz
+            read:quiz: solve quiz
