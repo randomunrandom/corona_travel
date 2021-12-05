@@ -1,0 +1,113 @@
+networks:
+  backend:
+
+services:
+  root:
+    build:
+      dockerfile: ./Containerfile # relative to context
+      context: $PWD
+    networks:
+      - backend
+    depends_on:
+      - places
+      - facts
+      - map_2d
+      - map_3d
+    environment:
+      ASGI_APP: "main.app:app"
+      FACTS_URL: http://facts:1234
+      PLACES_URL: http://places:1234
+      MAP_2D_URL: http://map_2d:1234
+      MAP_3D_URL: http://map_3d:1234
+    volumes:
+      - "$PWD/src/hackaton/:/corona_travel/main"
+    ports:
+      - "1234:1234"
+
+  places:
+    build:
+      dockerfile: ./Containerfile # relative to context
+      context: $PWD
+    networks:
+      - backend
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      MONGO_URL: $MONGO_URL
+      ASGI_APP: "places.app:app"
+    volumes:
+      - "$PWD/src/places/:/corona_travel/places"
+    ports:
+      - "1235:1234"
+
+  facts:
+    build:
+      dockerfile: ./Containerfile # relative to context
+      context: $PWD
+    networks:
+      - backend
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      MONGO_URL: $MONGO_URL
+      ASGI_APP: "facts.app:app"
+    volumes:
+      - "$PWD/src/facts/:/corona_travel/facts"
+    ports:
+      - "1236:1234"
+
+  map_2d:
+    build:
+      dockerfile: ./Containerfile # relative to context
+      context: $PWD
+    networks:
+      - backend
+    depends_on:
+      places:
+        condition: service_started
+    environment:
+      PLACES_URL: http://places:1234
+      ASGI_APP: "map_2D.app:app"
+    volumes:
+      - "$PWD/src/map_2D/:/corona_travel/map_2D"
+    ports:
+      - "1237:1234"
+
+  map_3d:
+    build:
+      dockerfile: ./Containerfile # relative to context
+      context: $PWD
+    networks:
+      - backend
+    depends_on:
+      places:
+        condition: service_started
+    environment:
+      FACTS_URL: http://facts:1234
+      ASGI_APP: "map_3D.app:app"
+    volumes:
+      - "$PWD/src/map_3D/:/corona_travel/map_3D"
+    ports:
+      - "1238:1234"
+
+  mongo:
+    image: mongo:5
+    networks:
+      - backend
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: $MONGO_INITDB_ROOT_USERNAME
+#      MONGO_INITDB_ROOT_PASSWORD: $MONGO_INITDB_ROOT_PASSWORD
+#      MONGO_INITDB_DATABASE: $MONGO_INITDB_DATABASE
+    volumes:
+      - "$PWD/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo mongo:27017/corona_travel --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    ports:
+      - 27017:27017
+
